@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Example</title>
+  </head>
+    <body>
+      <h1>123</h1>
+      <img src="/image" alt="Pencil Image" id="sss">
+        <script>
+        var aa = document.getElementById("sss")
+        console.log(aa.src)
+        </script>
+      <button id ='brain'>111</button>
+      <script>
+        var brain = document.getElementById("brain")
+        var ggett
+        brain.addEventListener('click',async function () {
+        ggett = await sendDataToBackend('abstract');
+          //console.log("Message from Flask:", brain);
+        });
+        async function sendDataToBackend(action) {
+          try{
+              const url = '/brain' ;
+              const response = await fetch(url, {method: 'GET'});
+              const data = await response.json();
+              console.log(data);
+              return data;
+          }catch (e){
+              console.error('There was a problem with your fetch operation:', e);
+              throw e
+          }
+      }
+
+
+     </script>
+      <!--<script src="../static/func_.js"></script> -->
+      <!-- <script>
+        var message = '{{ message }}';
+        console.log("Message from Flask:", message);
+      </script> -->
+    </body>
+</html >
