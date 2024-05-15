@@ -1,4 +1,5 @@
 var img_temp_name 
+var img_temp_list
 
 document.addEventListener("DOMContentLoaded", () => {
 // 获取图片元素和div元素
@@ -173,9 +174,9 @@ get_fold_button.addEventListener('click',async function () {
         }
     }
 function show_file_list(files_){
+    img_temp_list = files_
     for(let i =0; i<files_.length;i++){
         addParagraph(files_[i])
-
 }}
 
 // 顯示img list
@@ -184,6 +185,8 @@ var img_list_area=document.getElementById("img_list_area");
 function addParagraph(img_name) {
     let paragraph = document.createElement("p");
     paragraph.textContent = img_name;
+    const index = img_temp_list.indexOf(img_name);
+    paragraph.id = 'path_'+ String(index);
     paragraph.setAttribute("onclick", "getPath(this)");
     img_list_area.appendChild(paragraph);
 }
@@ -191,6 +194,23 @@ function addParagraph(img_name) {
 function clearPaths() {
     img_list_area.innerHTML = ''; // 清空内容
 }
+
+// 前後張圖片按鈕
+
+document.getElementById("right_button").addEventListener("click", function() {
+    const index = img_temp_list.indexOf(img_temp_name) + 1 ;
+    if (index < img_temp_list.length) {
+        getPath(document.getElementById('path_'+ String(index)))
+
+    }
+});
+
+document.getElementById("left_button").addEventListener("click", function() {
+    const index = img_temp_list.indexOf(img_temp_name) - 1 ;
+    if (index >= 0) {
+        getPath(document.getElementById('path_'+ String(index)))
+    }
+});
 
 });
 
