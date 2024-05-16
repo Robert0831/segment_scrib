@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Polygon Drawing</title>
+<style>
+    #container {
+        position: relative;
+        width: 400px;
+        height: 300px;
+    }
+    #overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: crosshair;
+    }
+</style>
+</head>
+<body>
+
+<div id="container">
+    <img src="191.png" alt="Image" width="400" height="300">
+    <canvas id="overlay" width="400" height="300"></canvas>
+</div>
+
+<script>
+    window.onload = function() {
+        var canvas = document.getElementById('overlay');
+        var ctx = canvas.getContext('2d');
+        var points = []; // 存儲多邊形的頂點
+
+        function drawPolygon() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (var i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawPreview(x, y) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (var i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+            ctx.lineTo(x, y); // 在最後一個頂點和滑鼠位置之間畫一條連線
+            ctx.closePath();
+            ctx.fill();
+            drawPoints();
+        }
+        function drawPoints() {
+          for (var i = 0; i < points.length; i++) {
+              drawPoint(points[i].x, points[i].y);
+          }
+        }
+
+        function drawPoint(x, y) {
+            ctx.fillStyle = 'blue';
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        canvas.addEventListener('mousemove', function(event) {
+            if (points.length > 0) {
+                var rect = canvas.getBoundingClientRect();
+                var x = event.clientX - rect.left;
+                var y = event.clientY - rect.top;
+
+                drawPreview(x, y);
+            }
+        });
+
+        canvas.addEventListener('click', function(event) {
+            var rect = canvas.getBoundingClientRect();
+            var x = event.clientX - rect.left;
+            var y = event.clientY - rect.top;
+
+            points.push({ x: x, y: y });
+
+            
+            drawPolygon();
+            drawPoints();
+        });
+
+        canvas.addEventListener('contextmenu', function(event) {
+            event.preventDefault(); // 防止顯示上下文菜單
+            points = []; // 清空點陣列
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空畫布
+        });
+    };
+</script>
+
+</body>
+</html>
+
