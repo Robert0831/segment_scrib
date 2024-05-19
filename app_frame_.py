@@ -46,6 +46,18 @@ def get_image():
     return send_file(temp)
 
 
+@app.route('/json_', methods=['POST'])
+def tojson():
+    imgname = request.json.get('imgname')
+    poi = request.json.get('poi')
+    cls = request.json.get('cls')
+    print(imgname)
+    print(poi)
+    print(cls)
+    return '0'
+
+
+
 @app.route('/')
 def index():
     return render_template('frame_.html')

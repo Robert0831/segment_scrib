@@ -8,7 +8,11 @@ var context = canvas.getContext('2d');
 var scribArea = document.getElementById('scrib_area_');
 var image = document.getElementById('scrib_image');
 var container = document.querySelector('.scrib_area_container');
-//縮放圖片
+//poly
+var canvas_poly = document.getElementById('canvas_poly');
+var context_poly = canvas_poly.getContext('2d');
+var canvas_bg = document.getElementById('canvas_poly_all');
+var context_bg = canvas_bg.getContext('2d');
 
 image.src="static/191.png"
 
@@ -111,16 +115,6 @@ function stopDrawing() {
     }
 }
 
-function increaseLineWidth() {
-    lineWidth += 1; // 增加线条粗细
-}
-
-// 减少粗细的函数
-function decreaseLineWidth() {
-    if (lineWidth > 1) { // 防止粗细小于1
-        lineWidth -= 1; // 减少线条粗细
-    }
-}
 // 添加事件監聽器
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
@@ -131,14 +125,17 @@ canvas.addEventListener('contextmenu', event => event.preventDefault());
 
 
 document.getElementById("brain").addEventListener("click", function() {
-    // var width = scribArea.clientWidth;
-    // var height = scribArea.clientHeight;
     var width = image.clientWidth;
     var height = image.clientHeight;
-    // console.log(width)
-    // console.log(height)
     canvas.width = width;
     canvas.height = height;
+    canvas_poly.width=0;
+    canvas_poly.height=0;
+    //圖層移動
+    canvas.style.zIndex = 100;
+    canvas_poly.style.zIndex = 1;
+    canvas_bg.style.zIndex = 2;
+    context_poly.clearRect(0, 0, canvas_poly.width, canvas_poly.height)
 });
 var scrib_pn = 1
 document.getElementById("pos_scrib").addEventListener("click", function() {
@@ -148,8 +145,9 @@ document.getElementById("neg_scrib").addEventListener("click", function() {
     scrib_pn=0
 });
 document.getElementById("clear_scrib").addEventListener("click", function() {
-    canvas.width = image.clientWidth;
-    canvas.height = image.clientHeight;
+    context.clearRect(0, 0, canvas.width, canvas.height); 
+    //canvas.width = image.clientWidth;
+    //canvas.height = image.clientHeight;
 });
 
 // get_folder
@@ -211,6 +209,255 @@ document.getElementById("left_button").addEventListener("click", function() {
         getPath(document.getElementById('path_'+ String(index)))
     }
 });
+
+////--------------------------------------------------------------------------polygon
+///---------------------------------------------------------------------------
+var points = []; // 單個多邊形的頂點
+var total_points = [] //全部多邊形的頂點
+var get_class = document.querySelector('.input-class');
+var tol_get_class_value = []
+var ok_but = document.getElementById('ok_butt');
+var can_but = document.getElementById('can_butt');
+var diag= document.getElementById('myDialog');
+var json_python={}
+
+
+
+
+
+function retain_total_point(){
+    for (let i = 0; i < total_points.length; i++) {
+        draw_done_point(total_points[i],context_bg);
+        drawPolygon_bg(total_points[i],context_bg);
+    }}
+document.getElementById("poly").addEventListener("click", function() {
+    var width = image.clientWidth;
+    var height = image.clientHeight;
+    canvas_poly.width = width;
+    canvas_poly.height = height;
+    canvas_bg.width = width;
+    canvas_bg.height = height;
+
+    canvas.width = 0;
+    canvas.height = 0;
+    //圖層移動
+    canvas.style.zIndex = 1;
+    canvas_poly.style.zIndex = 100;
+    canvas_bg.style.zIndex = 2;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    console.log(total_points.length)
+    if (total_points.length>0){
+        console.log('sss')
+        retain_total_point();
+    }
+    
+});
+function drawPolygon() {
+    context_poly.clearRect(0, 0, canvas_poly.width, canvas_poly.height);
+
+    context_poly.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    context_poly.beginPath();
+    context_poly.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        context_poly.lineTo(points[i].x, points[i].y);
+    }
+    context_poly.closePath();
+    context_poly.fill();
+}
+
+
+function drawPreview(x, y) {
+    context_poly.clearRect(0, 0, canvas_poly.width, canvas_poly.height);
+
+    context_poly.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    context_poly.beginPath();
+    context_poly.moveTo(points[0].x, points[0].y);
+    for (var i = 1; i < points.length; i++) {
+        context_poly.lineTo(points[i].x, points[i].y);
+    }
+    context_poly.lineTo(x, y); // 在最後一個頂點和滑鼠位置之間畫一條連線
+    context_poly.closePath();
+    context_poly.fill();
+    drawPoints();
+    if (Math.sqrt(Math.pow(x - points[0].x, 2) + Math.pow(y - points[0].y, 2)) <= 10 && points.length >=3  ){
+        context_poly.beginPath();
+        context_poly.arc(points[0].x, points[0].y, 10, 0, Math.PI * 2);
+        context_poly.fill();
+    }
+}
+function drawPoints() {
+  for (let i = 0; i < points.length; i++) {
+    drawPoint(points[i].x, points[i].y);
+  }
+}
+
+
+function drawPoint(x, y) {
+    context_poly.fillStyle = 'blue';
+    context_poly.beginPath();
+    context_poly.arc(x, y, 3, 0, Math.PI * 2);
+    context_poly.fill();
+}
+
+function draw_done_point(poi,ctx_x){
+    for (var i = 0; i < poi.length; i++) {
+        ctx_x.fillStyle = 'blue';
+        ctx_x.beginPath();
+        ctx_x.arc(poi[i].x, poi[i].y, 3, 0, Math.PI * 2);
+        ctx_x.fill();
+    }
+}
+function showDialogAtPosition(x, y) {
+    diag.style.left = x + 'px';
+    diag.style.top = y + 'px';
+
+    diag.showModal();
+}
+
+
+
+function drawPolygon_bg(poi,ctx_x) {
+    //ctx_x.clearRect(0, 0, canvas_bg.width, canvas_bg.height);
+
+    ctx_x.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx_x.beginPath();
+    ctx_x.moveTo(poi[0].x, poi[0].y);
+    for (let i = 1; i < poi.length; i++) {
+        ctx_x.lineTo(poi[i].x, poi[i].y);
+    }
+    ctx_x.lineTo(poi[0].x, poi[0].y);
+    ctx_x.closePath();
+    ctx_x.fill();
+}
+canvas_poly.addEventListener('mousemove', function(event) {
+    if (points.length > 0) {        
+        let x = event.offsetX;
+        let y = event.offsetY;
+        drawPreview(x, y);
+    }
+});
+
+canvas_poly.addEventListener('click', function(event) {
+    let x = event.offsetX;
+    let y = event.offsetY;
+    if (points.length <= 2 ){
+        points.push({ x: x, y: y });
+        drawPolygon();
+        drawPoints();       
+    }
+    else{
+        if(Math.sqrt(Math.pow(x - points[0].x, 2) + Math.pow(y - points[0].y, 2)) <= 10 ){
+            showDialogAtPosition(event.clientX,event.clientY)
+        }
+        else{
+            points.push({ x: x, y: y });
+            drawPolygon();
+            drawPoints();   
+        }
+    }
+});
+
+
+
+ok_but.addEventListener('click', function(event) {
+    context_poly.clearRect(0, 0, canvas_poly.width, canvas_poly.height);
+    //畫背景
+    draw_done_point(points,context_bg);
+    drawPolygon_bg(points,context_bg)
+    total_points.push(points)
+    points = [] ;
+
+    show_ok_can(1)
+});
+can_but.addEventListener('click', function(event) {
+    drawPolygon();
+    drawPoints();  
+
+    show_ok_can(0)
+});
+function show_ok_can(ok_){
+    if (ok_==1){
+        let get_class_value=get_class.value;
+        if (get_class_value!="" && !tol_get_class_value.includes(get_class_value)){
+            tol_get_class_value.push(get_class_value)
+            add_cls_list(get_class_value)
+
+            ////測試回傳json
+            jsonto_={
+                imgname:img_temp_name,
+                poi:total_points,
+                cls:tol_get_class_value
+                }
+            json2thon (jsonto_)   
+        }
+    }
+}
+
+
+////------------------------------------------------------dialog 移動
+const dialog = document.getElementById('myDialog');
+const header = document.getElementById('dialogHeader');
+
+let isDragging = false;
+let offsetX, offsetY;
+
+header.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - dialog.offsetLeft;
+    offsetY = e.clientY - dialog.offsetTop;
+});
+header.addEventListener('mouseover', () => {
+    header.style.cursor = 'grab';
+});
+
+header.addEventListener('mouseout', () => {
+    header.style.cursor = '';
+});
+document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+    dialog.style.left = `${e.clientX - offsetX}px`;
+    dialog.style.top = `${e.clientY - offsetY}px`;
+    }
+});
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+
+//-------------------dialog 裡面的calass
+var class_list = document.getElementById('class_list');
+function add_cls_list(cls_name) {
+    let paragraph = document.createElement("p");
+    paragraph.textContent = cls_name;
+    paragraph.id = 'cls_'+ cls_name;
+    paragraph.addEventListener('click', function() {
+        get_cls(this)
+    })
+    class_list.appendChild(paragraph);
+}
+function get_cls(element){
+    get_class.value = element.textContent
+}
+
+async function json2thon(ddata) {
+    try{
+        const url = '/json_' ;
+        await fetch(url, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify(ddata)    
+        });
+    }catch (e){
+        console.error('There was a problem with your fetch operation:', e);
+        throw e
+    }
+}
+
+
+
+
+
 
 });
 

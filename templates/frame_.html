@@ -169,7 +169,54 @@
     display: block;
     }
 
+    /*-------------------poly相關---------------------*/
+    #myDialog{
+        margin: 0;
+        padding-top: 0px;
+        padding-left: 5px;
+        padding-right: 5px;
 
+    }
+    #class_list{
+        width: 50px;
+        height: 50px;
+        background-color: sandybrown;
+    }
+    .input-class{
+        width : 90px ;
+        height : 10px;
+        margin-bottom: 5px;
+    }
+    #ok_butt{
+        padding: 3px;
+        height : 20px;
+        margin-bottom: 5px;
+    }
+    #can_butt{
+        padding: 3px;
+        height : 20px;
+        margin-bottom: 5px;
+    }
+    #class_list{
+        width: 100%;
+    }
+    #class_list p{
+        margin: 0;
+        padding-left: 5px;
+    }
+    #class_list p:hover{ 
+        background-color: #a1aab3; 
+    }
+    #myCanvas, #canvas_poly, #canvas_poly_all{
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #dialogHeader{
+        margin: 0;
+        height: 10px;
+        cursor: grab;
+    }
 </style>
 <script src="../static/func_scrib.js"></script>
 </head>
@@ -189,7 +236,7 @@
                 <span class="tooltiptext">Prev image</span>
             </button>
             <button>
-                <img src="../static/polygon.png" alt="Icon 4">
+                <img src="../static/polygon.png" alt="Icon 4" id="poly">
                 <span class="tooltiptext">Polygon</span>
             </button>
             <button>
@@ -227,6 +274,23 @@
             <div id="scrib_area_" class="scrib_area">
                 <div class="scrib_area_container">
                     <canvas id="myCanvas"></canvas>
+                    <canvas id="canvas_poly"></canvas>
+                    <canvas id="canvas_poly_all"></canvas>
+
+                    <!-- poly完的選單 -->
+                    <dialog id="myDialog">
+                        <div id="dialogHeader"></div>
+                        <input class="input-class" placeholder="Input class"/>
+                        <form method="dialog">
+                          <button id="ok_butt" >OK</button>
+                          <button id = "can_butt">Cancel</button>
+                          <div id ="class_list">
+                
+                          </div>
+                        </form>
+                    </dialog>
+
+
                     <img src="" id="scrib_image">
                 </div>
             </div>
