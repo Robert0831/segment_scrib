@@ -8,11 +8,14 @@ var context = canvas.getContext('2d');
 var scribArea = document.getElementById('scrib_area_');
 var image = document.getElementById('scrib_image');
 var container = document.querySelector('.scrib_area_container');
+var filt_name=document.getElementById('filt_name');
 //poly
 var canvas_poly = document.getElementById('canvas_poly');
 var context_poly = canvas_poly.getContext('2d');
 var canvas_bg = document.getElementById('canvas_poly_all');
 var context_bg = canvas_bg.getContext('2d');
+
+
 
 image.src="static/191.png"
 
@@ -189,11 +192,22 @@ function addParagraph(img_name) {
     img_list_area.appendChild(paragraph);
 }
 
+filt_name.addEventListener('input', function(event) {
+    if(event.target.value!=""){
+        clearPaths()
+        show_file_list(load_fold.img_list.filter(path => path.includes(event.target.value)))
+    }
+    else{
+        clearPaths()
+        show_file_list(load_fold.img_list)
+    }
+});
 function clearPaths() {
     img_list_area.innerHTML = ''; // 清空内容
 }
 
 // 前後張圖片按鈕
+
 
 document.getElementById("right_button").addEventListener("click", function() {
     const index = img_temp_list.indexOf(img_temp_name) + 1 ;
@@ -215,11 +229,11 @@ document.getElementById("left_button").addEventListener("click", function() {
 var points = []; // 單個多邊形的頂點
 var total_points = [] //全部多邊形的頂點
 var get_class = document.querySelector('.input-class');
-var tol_get_class_value = []
+var dif_class_value = [] //類別
+var tol_get_class_value = [] //每個物件的cls
 var ok_but = document.getElementById('ok_butt');
 var can_but = document.getElementById('can_butt');
 var diag= document.getElementById('myDialog');
-var json_python={}
 
 
 
@@ -365,6 +379,7 @@ ok_but.addEventListener('click', function(event) {
     draw_done_point(points,context_bg);
     drawPolygon_bg(points,context_bg)
     total_points.push(points)
+    tol_get_class_value.push(get_class.value)
     points = [] ;
 
     show_ok_can(1)
@@ -378,8 +393,8 @@ can_but.addEventListener('click', function(event) {
 function show_ok_can(ok_){
     if (ok_==1){
         let get_class_value=get_class.value;
-        if (get_class_value!="" && !tol_get_class_value.includes(get_class_value)){
-            tol_get_class_value.push(get_class_value)
+        if (get_class_value!="" && !dif_class_value.includes(get_class_value)){
+            dif_class_value.push(get_class_value)
             add_cls_list(get_class_value)
 
             ////測試回傳json

@@ -3,6 +3,8 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QApplication
 import sys
 import os
+import cv2
+import json
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -42,7 +44,7 @@ def choose_fold():
 @app.route('/img_temp', methods=['POST'])
 def get_image():
     temp = request.json.get('temp')
-    print(temp)
+    # print(temp)
     return send_file(temp)
 
 
@@ -51,9 +53,28 @@ def tojson():
     imgname = request.json.get('imgname')
     poi = request.json.get('poi')
     cls = request.json.get('cls')
-    print(imgname)
-    print(poi)
-    print(cls)
+    
+    img_name=os.path.basename(imgname)
+    img=cv2.imread(imgname)
+    a={}
+    a["objects"]=[]
+    for i, poi_group in enumerate(poi):
+        poi_t = []
+        for point in poi_group:
+            poi_t.append([point['x'], point['y']])
+        a["objects"].append({
+        "label":poi_t ,
+        "points":cls[i],
+        })
+
+    a["imagePath"]=img_name
+    a["imageHeight"]=img.shape[0]
+    a["imageWidth"] =img.shape[1]
+
+    file_path=imgname[:-3]+'json'
+    with open(file_path, 'w') as json_file:
+        json.dump(a, json_file, indent=4)
+        
     return '0'
 
 
