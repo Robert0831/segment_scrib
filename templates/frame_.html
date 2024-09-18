@@ -76,6 +76,10 @@
         justify-content: center; 
         align-items: center; 
     }  
+    .liness {
+        width: 3px;
+        background-color: black;
+    }
     .scrib_area{
         flex: 1;
         background-color: sandybrown;
@@ -116,14 +120,14 @@
         margin: 5px;
         padding: 5px;
         height: 100%;
-        background: red;
+        /*background: red;*/
     }
     .show_list .object{
         border: var(--border);
         margin: 5px;
         padding: 5px;
         height: 100%;
-        background: blue;
+        /*background: blue;*/
     }
     .show_list .files{
         border: var(--border);
@@ -132,7 +136,6 @@
         height: 100%;
         background: #f1d178;
         overflow: auto; 
-        
     }   
     .files p{
         cursor: pointer;
@@ -170,34 +173,34 @@
     }
 
     /*-------------------poly相關---------------------*/
-    #myDialog{
+    #myDialog,#myDialog2{
         margin: 0;
         padding-top: 0px;
         padding-left: 5px;
         padding-right: 5px;
 
     }
-    #class_list{
+    #class_list,#class_list2{
         width: 50px;
         height: 50px;
         background-color: sandybrown;
     }
-    .input-class{
+    .input-class,.input-class2 {
         width : 90px ;
         height : 10px;
         margin-bottom: 5px;
     }
-    #ok_butt{
+    #ok_butt,#ok_butt2{
         padding: 3px;
         height : 20px;
         margin-bottom: 5px;
     }
-    #can_butt{
+    #can_butt,#del_butt{
         padding: 3px;
         height : 20px;
         margin-bottom: 5px;
     }
-    #class_list{
+    #class_list,#class_list2{
         width: 100%;
     }
     #class_list p{
@@ -207,7 +210,16 @@
     #class_list p:hover{ 
         background-color: #a1aab3; 
     }
-    #myCanvas, #canvas_poly, #canvas_poly_all{
+
+    #class_list2 p{
+        margin: 0;
+        padding-left: 5px;
+    }
+    #class_list2 p:hover{ 
+        background-color: #a1aab3; 
+    }
+
+    #myCanvas, #canvas_poly, #canvas_poly_all, #canvas_click,#canvas_none{
         position: absolute;
         top: 0;
         left: 0;
@@ -217,6 +229,31 @@
         height: 10px;
         cursor: grab;
     }
+    /*-----------------右側*/
+
+    .dot {
+        height: 10px;
+        width: 10px;
+        background-color: #e00808;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+        overflow: auto;
+      }
+    .label p{
+        margin: 0;
+        padding-left: 5px;
+    }
+    .object{
+        text-align: left;
+    }
+    .object p{
+        margin: 0;
+        padding-left: 5px;
+        text-align: left;
+    }
+
+
 </style>
 <script src="../static/func_scrib.js"></script>
 </head>
@@ -240,7 +277,7 @@
                 <span class="tooltiptext">Polygon</span>
             </button>
             <button>
-                <img src="../static/pencil.png" alt="Icon 5">
+                <img src="../static/pencil.png" alt="Icon 5" id="modeify">
                 <span class="tooltiptext">Revise</span>
             </button>
             <button>
@@ -248,34 +285,46 @@
                 <span class="tooltiptext">Scribble and Segment</span>
             </button>
             <button>
-                <img src="../static/tracking.png" alt="Icon 7">
+                <img src="../static/tracking.png" alt="Icon 7" id="tracking">
                 <span class="tooltiptext">Tracking</span>
             </button>
-            
+            <button>
+                <img src="../static/click.png" alt="Icon 8" id="clicks">
+                <span class="tooltiptext">Click and Segment</span>
+            </button>
         </div>
         <div class="content">
             <div class="header">
-                <span>Model: Haotracking; Shortcuts: Previous: A, Next: D</span>
+                <span>Model: ScriAndTracking; Shortcuts: Previous: A, Next: D</span>
             </div>
             <div class="intro">
                 <p>Only when use model can use the button</p>
                 <button class="scrib_buttons" id="pos_scrib">+Draw (X) <span class="tooltiptext">Positive Scribble</span> </button>
                 <button class="scrib_buttons" id="neg_scrib">-Draw (W) <span class="tooltiptext">Negative Scribble</span></button>
-                <button class="scrib_buttons">Run (S) <span class="tooltiptext">Run the model</span></button>
-                <button class="scrib_buttons">Finish (F) <span class="tooltiptext">Done the object</span></button>
+                <button class="scrib_buttons" id="sent_scrib">Run (S) <span class="tooltiptext">Run the model</span></button>
+                <button class="scrib_buttons" id="finish_pred">Finish (F) <span class="tooltiptext">Done the object</span></button>
                 <button class="scrib_buttons" id="clear_scrib">Clear (C) <span class="tooltiptext">Clear Scribble</span></button> 
+
+                <div class="liness"></div> 
+                <button class="scrib_buttons" id="pos_click">+Poi  <span class="tooltiptext">Positive Click</span> </button>
+                <button class="scrib_buttons" id="neg_click">-Poi <span class="tooltiptext">Negative Click</span></button>
+                <button class="scrib_buttons" id="sent_click">Run_C <span class="tooltiptext">Run the model</span></button>
+                <button class="scrib_buttons" id="finish_click">Finish_C <span class="tooltiptext">Done the object</span></button>
+                <button class="scrib_buttons" id="clear_click">Clear_C <span class="tooltiptext">Clear Click</span></button> 
 
                 <!-- <button class="scrib_buttons">Return (Z)</button> -->
                 <!-- </div> -->
             </div>
             <div class="intro_c">
-                <p> Will change the intro within different button.</p>
+                <p id ="remind"> Will change the intro within different button.</p>
             </div>
             <div id="scrib_area_" class="scrib_area">
                 <div class="scrib_area_container">
                     <canvas id="myCanvas"></canvas>
                     <canvas id="canvas_poly"></canvas>
                     <canvas id="canvas_poly_all"></canvas>
+                    <canvas id="canvas_click"></canvas>
+                    <canvas id="canvas_none"></canvas>
 
                     <!-- poly完的選單 -->
                     <dialog id="myDialog">
@@ -289,6 +338,20 @@
                           </div>
                         </form>
                     </dialog>
+                    
+                    <!-- 更改標記好的選單 -->
+                    <dialog id="myDialog2">
+                        <div id="dialogHeader2">Modefy & delete</div>
+
+                        <input class="input-class2" placeholder="Input class"/>
+                        <form method="dialog">
+                        <button id="ok_butt2" >OK</button>
+                        <button id = "del_butt">Delete</button>
+                        <div id ="class_list2">
+                
+                        </div>
+                        </form>
+                    </dialog>
 
 
                     <img src="" id="scrib_image">
@@ -297,15 +360,15 @@
         </div>
         <div class="show_list">
             <p>Label</p>
-            <div class="label">
-
+            <div class="label" id = "dif_col_list" >
+                
             </div>
             <p>Object</p>
-            <div class="object">
-
+            <div class="object" id = "obj_list">
+                
             </div>
             <p>Files</p>
-            <input placeholder="File name"/ id='filt_name'>
+            <input placeholder="File name" id='filt_name'>
 
             <div class="files" id="img_list_area">
                 
