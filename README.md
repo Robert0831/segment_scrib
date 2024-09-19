@@ -17,7 +17,7 @@ pipreqs ./ --encoding=utf8
 下載連結
 [Download]([./static/labell.png](https://drive.google.com/file/d/1ICzBzkj8ER_vrwRxY_esvK_cPykXSJLa/view?usp=sharing))
 
-取得conda環境
+建立conda環境
 ```shell
 #Create fold for the env
 \Users\username\anaconda3\envs\[env name]
