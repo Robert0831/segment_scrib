@@ -14,7 +14,7 @@ pipreqs ./ --encoding=utf8
 
 
 # 直接下載(包含weight和環境)
-![Download]([./static/labell.png](https://drive.google.com/file/d/1ICzBzkj8ER_vrwRxY_esvK_cPykXSJLa/view?usp=sharing))
+[Download]([./static/labell.png](https://drive.google.com/file/d/1ICzBzkj8ER_vrwRxY_esvK_cPykXSJLa/view?usp=sharing))
 取得conda環境
 ```shell
 #Create fold for the env
