@@ -19,6 +19,8 @@ pipreqs ./ --encoding=utf8
 ```shell
 #Create fold for the env
 \Users\username\anaconda3\envs\['env name']
+cd C:\Users\username\anaconda3\envs\['env name']
 
+# 取得環境
 tar -xzf env.tar.gz 
 ```
