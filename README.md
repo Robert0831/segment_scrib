@@ -1,6 +1,6 @@
 # car_scrib
 
-![](./static/labell.jpeg)
+![](./static/labell.png)
 
 ## 使用 pipreqs 
 
