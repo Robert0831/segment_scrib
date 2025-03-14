@@ -15,7 +15,7 @@ pipreqs ./ --encoding=utf8
 
 # 直接下載(包含weight和環境)
 下載連結
-[Download]([./static/labell.png](https://drive.google.com/file/d/1ICzBzkj8ER_vrwRxY_esvK_cPykXSJLa/view?usp=sharing))
+[Download](https://drive.google.com/file/d/1ICzBzkj8ER_vrwRxY_esvK_cPykXSJLa/view?usp=sharing)
 
 建立conda環境
 ```shell
