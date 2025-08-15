@@ -1,5 +1,6 @@
 # car_scrib
 
+點擊圖片觀看
 
 [![影片預覽](./static/labell.png)](https://drive.google.com/file/d/1jD8EkONjXD3skJkF6RTfl3r-Sw_I6gh1/view?usp=drive_link)
 ## 使用 pipreqs 
