@@ -1,8 +1,6 @@
 # car_scrib
-```
-![](./static/labell.png)
-```
-[![](./static/labell.png)](https://drive.google.com/file/d/1jD8EkONjXD3skJkF6RTfl3r-Sw_I6gh1/view?usp=drive_link)]
+
+[![點擊觀看](./static/labell.png)(https://drive.google.com/file/d/1jD8EkONjXD3skJkF6RTfl3r-Sw_I6gh1/view?usp=drive_link)]
 
 ## 使用 pipreqs 
 去取得當前專案的環境
